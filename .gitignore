@@ -100,8 +100,8 @@ celerybeat.pid
 
 # SageMath parsed files
 *.sage.py
-.jpg
-.xlsx
+*.jpg
+*.xlsx
 # Environments
 .env
 .venv
@@ -128,3 +128,4 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+mylogfile.log
