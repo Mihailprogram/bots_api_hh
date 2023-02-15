@@ -102,6 +102,8 @@ celerybeat.pid
 *.sage.py
 *.jpg
 *.xlsx
+*.docx
+*.json
 # Environments
 .env
 .venv
@@ -128,4 +130,5 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+mylogfile.log
 mylogfile.log

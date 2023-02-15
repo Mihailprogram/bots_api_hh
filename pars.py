@@ -1,3 +1,4 @@
+from pprint import pprint
 import requests
 from bs4 import BeautifulSoup
 import lxml
@@ -45,6 +46,27 @@ def pars_hh():
     vse.append(name)
     vse.append(all_vak)
     return all_vak
+
+URL = "https://api.hh.ru/vacancies"
+
+
+def get_api(page=0):
+    parms = {
+        'text': 'Python',
+        "area": 3,
+        'page': page,
+        'per_page': 100,
+        "search_field": "name"
+    }
+    try:
+        response = requests.get(URL, parms)
+        with open('data.json', 'w',encoding='utf-8') as outfile:
+            json.dump(response.json(), outfile,indent=4,ensure_ascii=False)
+    except Exception:
+        eror = response.status_code
+        raise Exception(f'Eror API {eror}')
+    return response.json()
+
 def vk_pars():
     token = 'vk1.a.pdU85KCsHduFReb9547sy8hmxlhXsEXZyYrZTk9-OTecQFWBLRTQupIdqLwwJ9KnMbHfarq-cKKAOLhGe9u02jUPpHOhZymerqN7PCBdBk6AMl1ARuBrzPFQJQN1vd9K5jZNr-Rp8DgI9rKOzIseISM0S6Rc2E4i5PoU9hwsMdjdnAi0V3VdhPuLDDcnTriNy8m0mlWYu2ZP8_hR7_NaJQ'
     url = f'https://api.vk.com/method/wall.get?owner_id=296211117&count=137&access_token={token}&v=5.131'
@@ -57,6 +79,7 @@ def vk_pars():
     with open('data.json', 'w',encoding='utf-8') as outfile:
         json.dump(src, outfile,indent=4,ensure_ascii=False)
     print(resp.text)
+
 def xlm():   
     a = pars_hh()
     df = pd.DataFrame(
@@ -66,5 +89,6 @@ def xlm():
         }
     )
     df.to_excel('./hh.xlsx',index=False)
+
 if __name__ =="__main__":
-    vk_pars()
+    get_api()
