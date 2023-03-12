@@ -6,7 +6,6 @@ import time
 from hh import *
 
 
-from doc import word
 
 
 bot = telebot.TeleBot('5848488244:AAFhyaydtOyVoTODNP6R4MsBTSs-IpfZQOE')
@@ -14,113 +13,106 @@ bot = telebot.TeleBot('5848488244:AAFhyaydtOyVoTODNP6R4MsBTSs-IpfZQOE')
 but = telebot.types.ReplyKeyboardMarkup(resize_keyboard=True)
 but.add("Вакансии","Что умеешь?",'Список вакансии xlsx')
 
-
-
+sl_id = {}
+sl_menu = {}
+sl_iter = {}
 @bot.message_handler(commands=['start'])
 def start(message):
     bot.send_message(message.chat.id,'Привет ты написал мне /start,',reply_markup=but)
-file = False
-@bot.message_handler(content_types=['photo', 'document'])
-def handler_file(message):
-    Path(f'files/{message.chat.id}/').mkdir(parents=True, exist_ok=True)
-    if message.content_type == 'photo':
-        file_info = bot.get_file(message.photo[len(message.photo) - 1].file_id)
-        downloaded_file = bot.download_file(file_info.file_path)
-        src =  file_info.file_path.replace('photos/', '')
-        with open(src, 'wb') as new_file:
-            new_file.write(downloaded_file)
+
+# @bot.message_handler(content_types=['photo', 'document'])
+# def handler_file(message):
+#     Path(f'files/{message.chat.id}/').mkdir(parents=True, exist_ok=True)
+#     if message.content_type == 'photo':
+#         file_info = bot.get_file(message.photo[len(message.photo) - 1].file_id)
+#         downloaded_file = bot.download_file(file_info.file_path)
+#         src =  file_info.file_path.replace('photos/', '')
+#         with open(src, 'wb') as new_file:
+#             new_file.write(downloaded_file)
                 
-        word()
-        global file
-        file = True
-             
-count = 0
-k1=0
+#         word()
+#         global file
+#         file = True
+# next_iter = 0     
+# count = 0
+# k1=0
 num = False
 vakansis = False 
 # dl_vak = True
 masiv = []
-mas_next = []
-massiv_city = []
+# mas_next = []
+# massiv_city = []
+
+
 @bot.message_handler(content_types=["text"])
 def get_text_messages(message):
-    if message.text =="Next=>":
+    global dl_vak
+    global sl_id
+    global sl_menu
+    global sl_iter
+    if message.text == "На главную":
+        but = telebot.types.ReplyKeyboardMarkup(resize_keyboard=True)
+        but.add("Вакансии","Что умеешь?",'Список вакансии xlsx')
+        sl_menu[message.chat.id] = False
+        sl_iter[message.chat.id] = 0
+        dl_vak = False
+        bot.send_message(message.chat.id,'Главная', reply_markup=but)
+
+    if message.text == "Next=>":
         # global k1
         # k1+=1
-        global mas_next
-        mas_next.append('next')
-        # keyboard = types.InlineKeyboardMarkup()
-        # b12 = types.InlineKeyboardButton(text="Вакансии  в Екб", callback_data="a1")
-        # keyboard.add(b12)
-        # bot.send_message(message.from_user.id, text='Нажмите ', reply_markup=keyboard) 
+        global next_iter
+        sl_iter[message.chat.id] += 5
+    
     if message.text == "Что умеешь?":
+        sl_iter[message.chat.id] = 0
         bot.send_message(message.from_user.id, "Привет, я умею выдавать вакнсии по одной(для этого выбирете Вакансии) или сразу все exel файлом(Список вакансии xlsx).") 
     if message.text == "Вакансии":
+        sl_iter[message.chat.id] = 0
+        sl_id[message.chat.id] = 'Sl'
         bot.send_message(message.from_user.id, "Напишите желаемую должность")
         global vakansis
         vakansis = True
-        global dl_vak
-        dl_vak = True
+        # global dl_vak
+        # dl_vak = True
     
-    if message.text!= "Вакансии" and vakansis==True:
+    if (message.text!= "Вакансии" and vakansis==True) or sl_iter[message.chat.id]>0:
         global masiv
-        masiv.append(message.text)
-        keyboard = types.InlineKeyboardMarkup()
-        b12 = types.InlineKeyboardButton(text="Вакансии  в Екб", callback_data="a0")
-        keyboard.add(b12)
-        bot.send_message(message.from_user.id, text='Нажмите ', reply_markup=keyboard) 
-        vakansis = False
         
-    
+        dl_vak = True
+        sl_menu[message.chat.id] = True
+        if message.text not in['Next=>','На главную', 'Вакансии'] and message.text not in masiv: 
+            sl_id[message.chat.id] = message.text
+            masiv.append(message.text)
+
+        vakansis = False
+        if sl_iter[message.chat.id] < len(m_hh(sl_id[message.chat.id])[1]):
+            for k in m_hh(sl_id[message.chat.id])[1][sl_iter[message.chat.id]:sl_iter[message.chat.id]+5]:
+                
+                but = telebot.types.ReplyKeyboardMarkup(resize_keyboard=True)
+                but.add('')
+                bot.send_message(message.chat.id, k, reply_markup=but)
+                time.sleep(1)
+                if sl_menu[message.chat.id] == False:
+                    del sl_id[message.chat.id]
+                    sl_iter[message.chat.id] = 0
+                    break
+            but = telebot.types.ReplyKeyboardMarkup(resize_keyboard=True)
+            but.add('Next=>', 'На главную')
+            bot.send_message(message.chat.id, 'Выбери', reply_markup=but)
+
+            if sl_menu[message.chat.id] == False:
+                del sl_id[message.chat.id]
+                sl_iter[message.chat.id] = 0  
     if message.text == "Список вакансии xlsx":
         bot.send_message(message.from_user.id, "Напиши название вакансии")
         global num
         num = True
-    if message.text!='Список вакансии xlsx' and num==True:
+    if message.text != 'Список вакансии xlsx' and num == True:
         main_hh(message.text)
-        doc = open('C:/Users/Химачи/Desktop/Курс/hh.xlsx','rb')
+        doc = open('C:/Users/Химачи/Desktop/Курс/hh.xlsx', 'rb')
         bot.send_document(message.chat.id,doc)
         num = False
-    if message.text=="На главную":
-        dl_vak = False
-        bot.send_message(message.chat.id,'Главная',reply_markup=but)
 
-    
 
-@bot.callback_query_handler(func=lambda call: True)
-def boter(call):
-    global count
-
-    if call.data=='a0':
-        # dl_vak = True
-        for k in m_hh(masiv[-1])[1]:
-            count+=1
-            but = telebot.types.ReplyKeyboardMarkup(resize_keyboard=True)
-            but.add('')
-            bot.send_message(call.message.chat.id, k,reply_markup=but)
-            time.sleep(1)
-            # z2=dl_vak
-            # print(z2)
-            print(dl_vak)
-            z=k1
-            if count==3:
-                zaebal = False
-                count = 0
-                but = telebot.types.ReplyKeyboardMarkup(resize_keyboard=True)
-                but.add('Next=>','На главную')
-                bot.send_message(call.message.chat.id,'Выбери,',reply_markup=but)
-                time.sleep(2)
-                while True:
-                    global mas_next
-                    if 'next' in mas_next:
-                        print(mas_next)
-                        mas_next = []
-                        break
-                    if dl_vak!=True:
-                        flag = True
-                        break
-                if flag == True:
-                    break
-
-            
 bot.polling()

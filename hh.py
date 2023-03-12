@@ -59,14 +59,14 @@ def xlm(mas):
     )
     df.to_excel('./hh.xlsx', index=False)
 
-def m_hh(name_vak,area_city=3):
+def m_hh(name_vak, area_city=3):
     area_city = city_search(area_city)
     mas = []
     mas_name = []
     mas_url = []
-    found = int(get_api(0, name_vak,area_city).get('found') / 100) + 1
+    found = int(get_api(0, name_vak).get('found') / 100) + 1
     for i in range(found):
-        response = get_api(i, name_vak,area_city)
+        response = get_api(i, name_vak)
         list_h = pars_name(response)
         for i in list_h:
             try:
