@@ -4,11 +4,11 @@ from pars import pars_hh
 from pathlib import Path
 import time
 from hh import *
+from token_1 import TOKEN
 
 
 
-
-bot = telebot.TeleBot('5848488244:AAFhyaydtOyVoTODNP6R4MsBTSs-IpfZQOE')
+bot = telebot.TeleBot(TOKEN)
 
 but = telebot.types.ReplyKeyboardMarkup(resize_keyboard=True)
 but.add("Вакансии","Что умеешь?",'Список вакансии xlsx')
@@ -86,7 +86,7 @@ def get_text_messages(message):
             masiv.append(message.text)
 
         vakansis = False
-        if sl_iter[message.chat.id] < len(m_hh(sl_id[message.chat.id])[1]):
+        if sl_iter[message.chat.id] < len(m_hh(sl_id[message.chat.id])[1]) and len(m_hh(sl_id[message.chat.id])[1])>0:
             for k in m_hh(sl_id[message.chat.id])[1][sl_iter[message.chat.id]:sl_iter[message.chat.id]+5]:
                 
                 but = telebot.types.ReplyKeyboardMarkup(resize_keyboard=True)
@@ -102,8 +102,11 @@ def get_text_messages(message):
             bot.send_message(message.chat.id, 'Выбери', reply_markup=but)
 
             if sl_menu[message.chat.id] == False:
-                del sl_id[message.chat.id]
-                sl_iter[message.chat.id] = 0  
+                # del sl_id[message.chat.id]
+                sl_iter[message.chat.id] = 0
+        else:
+            bot.send_message(message.chat.id, 'Этого нет')
+
     if message.text == "Список вакансии xlsx":
         bot.send_message(message.from_user.id, "Напиши название вакансии")
         global num
