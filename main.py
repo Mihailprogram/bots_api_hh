@@ -50,13 +50,14 @@ def get_text_messages(message):
     global sl_id
     global sl_menu
     global sl_iter
+    global but
     if message.text == "На главную":
         but = telebot.types.ReplyKeyboardMarkup(resize_keyboard=True)
-        but.add("Вакансии","Что умеешь?",'Список вакансии xlsx')
+        but.add("Вакансии", "Что умеешь?", 'Список вакансии xlsx')
         sl_menu[message.chat.id] = False
         sl_iter[message.chat.id] = 0
         dl_vak = False
-        bot.send_message(message.chat.id,'Главная', reply_markup=but)
+        bot.send_message(message.chat.id, 'Главная', reply_markup=but)
 
     if message.text == "Next=>":
         # global k1
@@ -77,6 +78,8 @@ def get_text_messages(message):
         # dl_vak = True
     
     if (message.text!= "Вакансии" and vakansis==True) or sl_iter[message.chat.id]>0:
+        bot.send_message(message.chat.id, "Информация обрабатывается,подождите..",
+                         reply_markup=types.ReplyKeyboardRemove())
         global masiv
         
         dl_vak = True
@@ -108,13 +111,13 @@ def get_text_messages(message):
             bot.send_message(message.chat.id, 'Этого нет')
 
     if message.text == "Список вакансии xlsx":
-        bot.send_message(message.from_user.id, "Напиши название вакансии")
+        bot.send_message(message.from_user.id, "Напиши название вакансии", reply_markup=types.ReplyKeyboardRemove())
         global num
         num = True
     if message.text != 'Список вакансии xlsx' and num == True:
         main_hh(message.text)
         doc = open('C:/Users/Химачи/Desktop/Курс/hh.xlsx', 'rb')
-        bot.send_document(message.chat.id,doc)
+        bot.send_document(message.chat.id,doc, reply_markup=but)
         num = False
 
 
