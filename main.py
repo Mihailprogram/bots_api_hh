@@ -16,6 +16,7 @@ but.add("Вакансии","Что умеешь?",'Список вакансии
 sl_id = {}
 sl_menu = {}
 sl_iter = {}
+sl_city = {}
 @bot.message_handler(commands=['start'])
 def start(message):
     bot.send_message(message.chat.id,'Привет ты написал мне /start,',reply_markup=but)
@@ -38,6 +39,8 @@ def start(message):
 # k1=0
 num = False
 vakansis = False 
+city = False
+flag = False
 # dl_vak = True
 masiv = []
 # mas_next = []
@@ -51,6 +54,12 @@ def get_text_messages(message):
     global sl_menu
     global sl_iter
     global but
+    global sl_city
+    global masiv
+    global city
+    global vakansis
+    global flag
+
     if message.text == "На главную":
         but = telebot.types.ReplyKeyboardMarkup(resize_keyboard=True)
         but.add("Вакансии", "Что умеешь?", 'Список вакансии xlsx')
@@ -71,30 +80,56 @@ def get_text_messages(message):
     if message.text == "Вакансии":
         sl_iter[message.chat.id] = 0
         sl_id[message.chat.id] = 'Sl'
-        bot.send_message(message.from_user.id, "Напишите желаемую должность")
-        global vakansis
+        # sl_city[message.chat.id] = 'None'
+        bot.send_message(message.from_user.id, "Напишите желаемую должность",
+                         reply_markup=types.ReplyKeyboardRemove())
+        
         vakansis = True
         # global dl_vak
         # dl_vak = True
     
-    if (message.text!= "Вакансии" and vakansis==True) or sl_iter[message.chat.id]>0:
+    if message.text != "Вакансии" and vakansis == True:
+        if message.text not in['Next=>','На главную', 'Вакансии', "Напишите_город"] and message.text not in masiv: 
+            sl_id[message.chat.id] = message.text
+            masiv.append(message.text)
+        vakansis = False
+        print('это вакансии',sl_id)
+        
+        bot.send_message(message.from_user.id, "Напишите_город",
+                         reply_markup=types.ReplyKeyboardRemove())
+        # print(message.text)
+        if sl_id.get(message.chat.id)!=None:
+            city = True
+        # time.sleep(5)
+    if (message.text != sl_id.get(message.chat.id)  and city == True):
+    
+        if message.text not in['Next=>','На главную', 'Вакансии',"Напишите_город"] and message.text not in masiv : 
+            sl_city[message.chat.id] = message.text
+            masiv.append(message.text)
+        city = False
+        if sl_city.get(message.chat.id)!=None:
+            flag = True
+        print('Город =',sl_city)
+    
+    if flag == True or sl_iter[message.chat.id]>0:
         bot.send_message(message.chat.id, "Информация обрабатывается,подождите..",
                          reply_markup=types.ReplyKeyboardRemove())
-        global masiv
+        
         
         dl_vak = True
         sl_menu[message.chat.id] = True
-        if message.text not in['Next=>','На главную', 'Вакансии'] and message.text not in masiv: 
-            sl_id[message.chat.id] = message.text
-            masiv.append(message.text)
+        # if message.text not in['Next=>','На главную', 'Вакансии'] and message.text not in masiv: 
+        #     sl_city[message.chat.id] = message.text
+        #     masiv.append(message.text)
 
-        vakansis = False
-        if sl_iter[message.chat.id] < len(m_hh(sl_id[message.chat.id])[1]) and len(m_hh(sl_id[message.chat.id])[1])>0:
-            for k in m_hh(sl_id[message.chat.id])[1][sl_iter[message.chat.id]:sl_iter[message.chat.id]+5]:
+        city = False
+        flag = False
+        if  sl_iter[message.chat.id] < len(m_hh(sl_id[message.chat.id], sl_city[message.chat.id])[1]) and len(m_hh(sl_id[message.chat.id], sl_city[message.chat.id])[1])>0:
+            for k in m_hh(sl_id[message.chat.id], sl_city[message.chat.id])[1][sl_iter[message.chat.id]:sl_iter[message.chat.id]+5]:
                 
                 but = telebot.types.ReplyKeyboardMarkup(resize_keyboard=True)
                 but.add('')
-                bot.send_message(message.chat.id, k, reply_markup=but)
+                bot.send_message(message.chat.id, k, reply_markup=types.ReplyKeyboardRemove())
                 time.sleep(1)
                 if sl_menu[message.chat.id] == False:
                     del sl_id[message.chat.id]
@@ -111,11 +146,13 @@ def get_text_messages(message):
             bot.send_message(message.chat.id, 'Этого нет')
 
     if message.text == "Список вакансии xlsx":
-        bot.send_message(message.from_user.id, "Напиши название вакансии", reply_markup=types.ReplyKeyboardRemove())
+        bot.send_message(message.from_user.id, "Напиши название вакансии и город через запятую",
+                         reply_markup=types.ReplyKeyboardRemove())
         global num
         num = True
     if message.text != 'Список вакансии xlsx' and num == True:
-        main_hh(message.text)
+        xlm_hh = message.text.split(',') 
+        main_hh(xlm_hh[0],xlm_hh[1])
         doc = open('C:/Users/Химачи/Desktop/Курс/hh.xlsx', 'rb')
         bot.send_document(message.chat.id,doc, reply_markup=but)
         num = False

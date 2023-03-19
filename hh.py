@@ -18,6 +18,8 @@ def get_api(page=0, name_vak='Python',area=3):
     except Exception as eror:
         eror = response.status_code
         raise Exception(f'Eror API {eror}')
+    with open('data.json', 'w',encoding='utf-8') as outfile:
+        json.dump(response.json(), outfile, indent=4,ensure_ascii=False)
     return response.json()
 
 def get_city():
@@ -30,6 +32,10 @@ def get_city():
     return src
 
 def city_search(name):
+    if name == 'Москва':
+        return 1
+    elif name == 'Санкт Петербург':
+        return 2
     try:
         lis = get_city()[0].get('areas')
         for obl in lis:
@@ -44,6 +50,7 @@ def pars_name(response):
         raise TypeError("Не словарь")
     try:
         list_hh = response.get('items')
+        print(type(list_hh))
         if isinstance(list_hh, list) is not True:
             raise TypeError("Not is list")
     except KeyError:
@@ -59,14 +66,14 @@ def xlm(mas):
     )
     df.to_excel('./hh.xlsx', index=False)
 
-def m_hh(name_vak, area_city=3):
-    area_city = city_search(area_city)
+def m_hh(name_vak, area_city):
+    name_area = city_search(area_city)
     mas = []
     mas_name = []
     mas_url = []
-    found = int(get_api(0, name_vak).get('found') / 100) + 1
+    found = int(get_api(0, name_vak, name_area).get('found') / 100) + 1
     for i in range(found):
-        response = get_api(i, name_vak)
+        response = get_api(i, name_vak, name_area)
         list_h = pars_name(response)
         for i in list_h:
             try:
@@ -78,8 +85,11 @@ def m_hh(name_vak, area_city=3):
     mas.append(mas_url)
     return mas
 
-def main_hh(name):
-    xlm(m_hh(name,'Нижний Тагил'))
+
+def main_hh(name, city):
+    xlm(m_hh(name, city))
+# main_hh('Python','Москва')
+
 
 if __name__ == "__main__":
-    main_hh("Программист")
+    main_hh('Python', 'Москва')
