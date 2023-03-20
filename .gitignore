@@ -104,6 +104,8 @@ celerybeat.pid
 *.xlsx
 *.docx
 *.json
+/token_1.py
+/pars.py
 # Environments
 .env
 .venv
@@ -133,3 +135,7 @@ dmypy.json
 mylogfile.log
 mylogfile.log
 token_1.pymylogfile.log
+mylogfile.log
+mylogfile.log
+mylogfile.log
+mylogfile.log
