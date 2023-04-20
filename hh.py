@@ -1,6 +1,7 @@
 import pandas as pd
 import requests
-import json
+from pprint import *
+
 
 URL = "https://api.hh.ru/vacancies"
 
@@ -20,14 +21,16 @@ def get_api(page=0, name_vak='Python',area=3):
         raise Exception(f'Eror API {eror}')
     return response.json()
 
+
 def get_city():
     try:
         url = "https://api.hh.ru/areas"
         response = requests.get(url)
         src = response.json()
-    except Exception as eror:
-        raise Exception(f'Ошибка api городов')
+    except Exception:
+        raise Exception('Ошибка api городов')
     return src
+
 
 def city_search(name):
     if name == 'Москва':
@@ -43,6 +46,7 @@ def city_search(name):
     except KeyError:
         raise KeyError('Леее')
 
+
 def pars_name(response):
     if isinstance(response, dict) is not True:
         raise TypeError("Не словарь")
@@ -53,6 +57,7 @@ def pars_name(response):
     except KeyError:
         raise KeyError('Ошибка доступа')
     return list_hh
+
 
 def xlm(mas):
     df = pd.DataFrame(
@@ -88,6 +93,5 @@ def main_hh(name, city):
     xlm(m_hh(name, city))
 
 
-
 if __name__ == "__main__":
-    pass
+    get_api()
