@@ -9,11 +9,12 @@ TOKEN = 'v3.r.137607305.f1b4421ad23ab48cd5eb27097414c6116825054d.8892a26bf44ab49
 HEADERS = { #'Authorization': f'Bearer {TOKEN}',
             "X-Api-App-Id": 'v3.r.137607305.f49266735db0e80af33f970306a21b38b1ab235a.d1608b3612c2f2ba4b7f98d384c03fe24f35aa99'}
 
-    
-def get_prof(name, city):
+
+def get_prof(name, city, salary):
     parms = {
         'keyword': name,
         'town': city,
+        "payment_value": salary,
     }
     resp = requests.get(URL, headers=HEADERS, params=parms)
     vacancies = resp.json()['objects']

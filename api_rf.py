@@ -77,8 +77,8 @@ regions = {
     "Челябинская область": "74",
     "Забайкальский край": "75",
     "Ярославская область": "76",
-    "г. Москва": "77",
-    "г. Санкт-Петербург": "78",
+    "Москва": "77",
+    "Санкт-Петербург": "78",
     "Еврейская автономная область": "79",
     "Ненецкий автономный округ": "83",
     "Ханты-Мансийский автономный округ - Югра": "86",
@@ -87,11 +87,12 @@ regions = {
 }
 
 
-def get_vak(name_vak, reg_name):
+def get_vak(name_vak, reg_name, salary):
     reg = regions[reg_name]
     URL = f'http://opendata.trudvsem.ru/api/v1/vacancies/region/{reg}'
     parms = {
-        "text": name_vak
+        "text": name_vak,
+        'salary_to': salary,
     }
     resp = requests.get(URL, params=parms)
     vakans = resp.json()['results']['vacancies']

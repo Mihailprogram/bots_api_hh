@@ -6,13 +6,15 @@ from pprint import *
 URL = "https://api.hh.ru/vacancies"
 
 
-def get_api(page=0, name_vak='Python',area=3):
+def get_api(page=0, name_vak='Python', area=3, salary=20000):
     """А."""
     parms = {
         'text': name_vak,
         "area": area,
         'page': page,
         'per_page': 100,
+        'salary_from': salary,
+        "only_with_salary": True,
     }
     try:
         response = requests.get(URL, parms)
@@ -69,14 +71,14 @@ def xlm(mas):
     df.to_excel('./hh.xlsx', index=False)
 
 
-def m_hh(name_vak, area_city):
+def m_hh(name_vak, area_city, salary):
     name_area = city_search(area_city)
     mas = []
     mas_name = []
     mas_url = []
     found = int(get_api(0, name_vak, name_area).get('pages'))
     for i in range(found):
-        response = get_api(i, name_vak, name_area)
+        response = get_api(i, name_vak, name_area, salary)
         list_h = pars_name(response)
         for i in list_h:
             try:
@@ -94,4 +96,4 @@ def main_hh(name, city):
 
 
 if __name__ == "__main__":
-    get_api()
+    print(m_hh("Python", "Екатеринбург", 50000))
