@@ -80,14 +80,12 @@ def get_text_messages(message):
     
     if message.text == "Вакансии":
         sl_iter[message.chat.id] = 0
-        sl_id[message.chat.id] = 'Sl'
         bot.send_message(message.from_user.id, "Напишите желаемую должность",
                          reply_markup=types.ReplyKeyboardRemove())        
         vakansis = True
     if message.text != "Вакансии" and vakansis == True:
-        if message.text not in['Next=>','На главную', 'Вакансии', "Напишите_город", 'Вакании_SuperJob', 'Вакансии_РФ'] and message.text not in masiv: 
+        if message.text not in['Next=>','На главную', 'Вакансии', "Напишите_город", 'Вакании_SuperJob', 'Вакансии_РФ']: 
             sl_id[message.chat.id] = message.text
-            masiv.append(message.text)
         vakansis = False
         print('это вакансии',sl_id)
         
@@ -147,15 +145,13 @@ def get_text_messages(message):
     
     if message.text == "Вакансии_SuperJob":
         sl_iter[message.chat.id] = 0
-        sl_id[message.chat.id] = 'Sl'
         bot.send_message(message.from_user.id, "Напишите желаемую должность",
                          reply_markup=types.ReplyKeyboardRemove())        
         vakansis1 = True
 
     if message.text != "Вакансии_SuperJob" and vakansis1 == True:
-        if message.text not in['Next=>','На главную', 'Вакансии', "Напишите_город", 'Вакании_SuperJob','Вакансии_РФ'] and message.text not in masiv: 
+        if message.text not in['Next=>','На главную', 'Вакансии', "Напишите_город", 'Вакании_SuperJob','Вакансии_РФ']: 
             sl_id[message.chat.id] = message.text
-            masiv.append(message.text)
         vakansis1 = False
         print('это вакансии',sl_id)
         
@@ -165,9 +161,8 @@ def get_text_messages(message):
             city1 = True
     if (message.text != sl_id.get(message.chat.id)  and city1 == True):
     
-        if message.text not in['Next=>','На главную', 'Вакансии',"Напишите_город",'Вакансии_SuperJob','Вакансии_РФ'] and message.text not in masiv : 
+        if message.text not in['Next=>','На главную', 'Вакансии',"Напишите_город",'Вакансии_SuperJob','Вакансии_РФ']: 
             sl_city[message.chat.id] = message.text
-            masiv.append(message.text)
         city1 = False
         if sl_city.get(message.chat.id)!=None:
             flag1 = True
@@ -175,7 +170,6 @@ def get_text_messages(message):
                          reply_markup=types.ReplyKeyboardRemove())
     if flag1 == True and message.text != sl_city[message.chat.id]:
         sl_salary[message.chat.id] = int(message.text)
-        masiv.append(message.text)
         flag1 = False
         if sl_salary.get(message.chat.id)!=None:
             salary1 = True
@@ -214,15 +208,13 @@ def get_text_messages(message):
     # rf vak
     if message.text == "Вакансии_РФ":
         sl_iter[message.chat.id] = 0
-        sl_id[message.chat.id] = 'Sl'
         bot.send_message(message.from_user.id, "Напишите желаемую должность",
                          reply_markup=types.ReplyKeyboardRemove())        
         vakansis2 = True
 
     if message.text != "Вакансии_РФ" and vakansis2 == True:
-        if message.text not in['Next=>','На главную', 'Вакансии', "Напишите_город", 'Вакании_SuperJob','Вакансии_РФ'] and message.text not in masiv: 
+        if message.text not in['Next=>','На главную', 'Вакансии', "Напишите_город", 'Вакании_SuperJob','Вакансии_РФ']: 
             sl_id[message.chat.id] = message.text
-            masiv.append(message.text)
         vakansis2 = False
         print('это вакансии',sl_id)
         
@@ -232,9 +224,8 @@ def get_text_messages(message):
             city2 = True
     if (message.text != sl_id.get(message.chat.id)  and city2 == True):
     
-        if message.text not in['Next=>','На главную', 'Вакансии',"Напишите_город",'Вакансии_SuperJob','Вакансии_РФ'] and message.text not in masiv : 
+        if message.text not in['Next=>','На главную', 'Вакансии',"Напишите_город",'Вакансии_SuperJob','Вакансии_РФ']: 
             sl_city[message.chat.id] = message.text
-            masiv.append(message.text)
         city2 = False
         if sl_city.get(message.chat.id)!=None:
             flag2 = True
