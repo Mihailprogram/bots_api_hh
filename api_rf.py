@@ -1,5 +1,7 @@
 import requests
 from pprint import *
+from datetime import datetime, timedelta
+
 regions = {
     "Республика Адыгея": "01",
     "Республика Башкортостан": "02",
@@ -93,6 +95,30 @@ def get_vak(name_vak, reg_name, salary):
     parms = {
         "text": name_vak,
         'salary_to': salary,
+    }
+    resp = requests.get(URL, params=parms)
+    vakans = resp.json()['results']['vacancies']
+    mas = []
+    for i in vakans:
+        mas.append(i['vacancy']['vac_url'])
+    return mas
+
+def get_week_rf(name_vak, reg_name, salary):
+
+# Вычисляем даты начала и конца периода (7 дней назад и текущая дата)
+    end_date = datetime.now()
+    start_date = end_date - timedelta(days=7)
+
+    # Преобразуем даты в строковый формат, поддерживаемый API
+    date_from = start_date.strftime('%Y-%m-%d')
+    date_to = end_date.strftime('%Y-%m-%d')
+    reg = regions[reg_name]
+    URL = f'http://opendata.trudvsem.ru/api/v1/vacancies/region/{reg}'
+    parms = {
+        "text": name_vak,
+        'salary_to': salary,
+        'date_from': date_from,
+        'date_to': date_to,
     }
     resp = requests.get(URL, params=parms)
     vakans = resp.json()['results']['vacancies']

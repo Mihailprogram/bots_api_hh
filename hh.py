@@ -6,6 +6,24 @@ from pprint import *
 URL = "https://api.hh.ru/vacancies"
 
 
+def week_get(page=0, name_vak='Python', area=3, salary=20000):
+    parms = {
+        'text': name_vak,
+        "area": area,
+        'page': page,
+        'per_page': 100,
+        'salary_from': salary,
+        "only_with_salary": True,
+        'period': 7,
+    }
+    try:
+        response = requests.get(URL, parms)
+    except Exception as eror:
+        eror = response.status_code
+        raise Exception(f'Eror API {eror}')
+    return response.json()
+
+
 def get_api(page=0, name_vak='Python', area=3, salary=20000):
     """А."""
     parms = {
@@ -70,6 +88,20 @@ def xlm(mas):
     )
     df.to_excel('./hh.xlsx', index=False)
 
+
+def week_hh(name_vak, area_city, salary):
+    name_area = city_search(area_city)
+    mas_url = []
+    found = int(get_api(0, name_vak, name_area).get('pages'))
+    for i in range(found):
+        response = get_api(i, name_vak, name_area, salary)
+        list_h = pars_name(response)
+        for i in list_h:
+            try:
+                mas_url.append(i.get('alternate_url'))
+            except KeyError:
+                raise KeyError('Not kyes')
+    return mas_url
 
 def m_hh(name_vak, area_city, salary):
     name_area = city_search(area_city)

@@ -1,10 +1,11 @@
 import telebot
 from telebot import types
+import datetime
 import time
 from hh import *
-from api_super import get_prof
+from api_super import get_prof,get_week_su
 from token_1 import TOKEN
-from api_rf import get_vak
+from api_rf import get_vak,get_week_rf
 
 
 
@@ -45,19 +46,60 @@ salary = False
 salary1 = False
 salary2 = False
 
+week = False
+week1 = False
+week2 = False
+
+week_vak = []
+week_vak_rf = []
+week_vak_su = []
+
+#Дальше код для отправки каждый понедельник вакансий
+def schedule_job(message):
+    current_datetime = datetime.datetime.now()
+    if current_datetime.weekday() == 0:  # Проверка, что сегодня понедельник
+        bot.send_message(message.chat.id, "Привет это рассылка")
+        vacancies = week_hh(week_vak[-1][0], week_vak[-1][1], week_vak[-1][2])
+        for vacancy in vacancies:
+            bot.send_message(message.chat.id, vacancy)
+        del week_vak[-1]
+        
+def schedule_job_su(message):
+    current_datetime = datetime.datetime.now()
+    if current_datetime.weekday() == 0:  # Проверка, что сегодня понедельник
+        bot.send_message(message.chat.id, "Привет это рассылка")
+        vacancies = get_week_su(week_vak_su[-1][0], week_vak_su[-1][1], week_vak_su[-1][2])
+        for vacancy in vacancies:
+            bot.send_message(message.chat.id, vacancy)
+        del week_vak_su[-1]
+
+def schedule_job_rf(message):
+    current_datetime = datetime.datetime.now()
+    if current_datetime.weekday() == 0:  # Проверка, что сегодня понедельник
+        bot.send_message(message.chat.id, "Привет это рассылка")
+        vacancies = get_week_rf(week_vak_rf[-1][0], week_vak_rf[-1][1], week_vak_rf[-1][2])
+        for vacancy in vacancies:
+            bot.send_message(message.chat.id, vacancy)
+        del week_vak_rf[-1]
+
 @bot.message_handler(content_types=["text"])
 def get_text_messages(message):
     global dl_vak, vakansis1, flag1, city1
     global sl_id, vakansis2, flag2, city2
     global sl_menu, salary, salary1, salary2
     global sl_iter, sl_salary
-    global but
+    global but, week, week1, week2, week_vak, week_vak_rf, week_vak_su
     global sl_city
     global masiv
     global city
     global vakansis
     global flag
-
+    if len(week_vak) > 0:
+        schedule_job(message)
+    if len(week_vak_su) > 0:
+        schedule_job_su(message)
+    if len(week_vak_rf) > 0:
+        schedule_job_rf(message)
     if message.text == "На главную":
         but = telebot.types.ReplyKeyboardMarkup(resize_keyboard=True)
         but.add("Вакансии", "Что умеешь?", 'Список вакансии xlsx', 'Вакансии_SuperJob','Вакансии_РФ')
@@ -109,8 +151,15 @@ def get_text_messages(message):
         masiv.append(message.text)
         flag = False
         if sl_salary.get(message.chat.id)!=None:
+            week = True
+        bot.send_message(message.from_user.id, "Хотите присылать раз в неделю?(Да/нет)",
+                         reply_markup=types.ReplyKeyboardRemove())
+    if week == True:
+        if message.text == "Да":
+            mas_week = [sl_id[message.chat.id], sl_city[message.chat.id], sl_salary[message.chat.id]]
+            week_vak.append(mas_week)
+        if message.text == "Да" or message.text == "Нет":
             salary = True
-
     if salary == True:
         bot.send_message(message.chat.id, "Информация обрабатывается,подождите..",
                          reply_markup=types.ReplyKeyboardRemove())
@@ -172,6 +221,14 @@ def get_text_messages(message):
         sl_salary[message.chat.id] = int(message.text)
         flag1 = False
         if sl_salary.get(message.chat.id)!=None:
+            week1 = True
+        bot.send_message(message.from_user.id, "Хотите присылать раз в неделю?(Да/нет)",
+                         reply_markup=types.ReplyKeyboardRemove())
+    if week1 == True:
+        if message.text == "Да":
+            mas_week = [sl_id[message.chat.id], sl_city[message.chat.id], sl_salary[message.chat.id]]
+            week_vak.append(mas_week)
+        if message.text == "Да" or message.text == "Нет":
             salary1 = True
     if salary1 == True:
         bot.send_message(message.chat.id, "Информация обрабатывается,подождите..",
@@ -236,6 +293,14 @@ def get_text_messages(message):
         masiv.append(message.text)
         flag2 = False
         if sl_salary.get(message.chat.id)!=None:
+            week2 = True
+        bot.send_message(message.from_user.id, "Хотите присылать раз в неделю?(Да/нет)",
+                         reply_markup=types.ReplyKeyboardRemove())
+    if week2 == True:
+        if message.text == "Да":
+            mas_week = [sl_id[message.chat.id], sl_city[message.chat.id], sl_salary[message.chat.id]]
+            week_vak_rf.append(mas_week)
+        if message.text == "Да" or message.text == "Нет":
             salary2 = True
     if salary2 == True:
         bot.send_message(message.chat.id, "Информация обрабатывается,подождите..",
@@ -280,7 +345,5 @@ def get_text_messages(message):
         doc = open('C:/Users/Химачи/Desktop/Курс/hh.xlsx', 'rb')
         bot.send_document(message.chat.id, doc, reply_markup=but)
         num = False
-
-
 
 bot.polling()
