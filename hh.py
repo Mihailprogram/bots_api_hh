@@ -94,7 +94,7 @@ def week_hh(name_vak, area_city, salary):
     mas_url = []
     found = int(get_api(0, name_vak, name_area).get('pages'))
     for i in range(found):
-        response = get_api(i, name_vak, name_area, salary)
+        response = week_get(i, name_vak, name_area, salary)
         list_h = pars_name(response)
         for i in list_h:
             try:

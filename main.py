@@ -57,7 +57,7 @@ week_vak_su = []
 #Дальше код для отправки каждый понедельник вакансий
 def schedule_job(message):
     current_datetime = datetime.datetime.now()
-    if current_datetime.weekday() == 0:  # Проверка, что сегодня понедельник
+    if current_datetime.weekday() == 4:  # Проверка, что сегодня понедельник
         bot.send_message(message.chat.id, "Привет это рассылка")
         vacancies = week_hh(week_vak[-1][0], week_vak[-1][1], week_vak[-1][2])
         for vacancy in vacancies:
