@@ -25,18 +25,11 @@ def get_prof(name, city, salary):
     return arr
 
 def get_week_su(name, city, salary):
-    end_date = datetime.date.today()
-    start_date = end_date - datetime.timedelta(days=7)
-
-    # Форматируем даты в строковый вид в формате, ожидаемом API SuperJob
-    date_published_from = start_date.strftime('%Y-%m-%d')
-    date_published_to = end_date.strftime('%Y-%m-%d')
     parms = {
         'keyword': name,
         'town': city,
         "payment_value": salary,
-        'date_published_from': date_published_from,
-        'date_published_to': date_published_to,
+        'period': 7,
     }
     resp = requests.get(URL, headers=HEADERS, params=parms)
     vacancies = resp.json()['objects']

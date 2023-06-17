@@ -117,12 +117,12 @@ def get_week_rf(name_vak, reg_name, salary):
     parms = {
         "text": name_vak,
         'salary_to': salary,
-        'date_from': date_from,
-        'date_to': date_to,
     }
     resp = requests.get(URL, params=parms)
     vakans = resp.json()['results']['vacancies']
     mas = []
     for i in vakans:
-        mas.append(i['vacancy']['vac_url'])
+        created_date = i['vacancy']['creation-date']
+        if date_from <= created_date <= date_to:
+            mas.append(i['vacancy']['vac_url'])
     return mas

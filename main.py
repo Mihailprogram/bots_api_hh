@@ -57,29 +57,41 @@ week_vak_su = []
 #Дальше код для отправки каждый понедельник вакансий
 def schedule_job(message):
     current_datetime = datetime.datetime.now()
-    if current_datetime.weekday() == 4:  # Проверка, что сегодня понедельник
-        bot.send_message(message.chat.id, "Привет это рассылка")
+    if current_datetime.weekday() == 4:  
+        k = 0
+        bot.send_message(message.chat.id, "Привет это рассылка от HH")
         vacancies = week_hh(week_vak[-1][0], week_vak[-1][1], week_vak[-1][2])
         for vacancy in vacancies:
+            k += 1
             bot.send_message(message.chat.id, vacancy)
+            if k < 20:
+                break
         del week_vak[-1]
         
 def schedule_job_su(message):
     current_datetime = datetime.datetime.now()
-    if current_datetime.weekday() == 0:  # Проверка, что сегодня понедельник
-        bot.send_message(message.chat.id, "Привет это рассылка")
+    if current_datetime.weekday() == 5:  
+        k = 0
+        bot.send_message(message.chat.id, "Привет это рассылка Superjob")
         vacancies = get_week_su(week_vak_su[-1][0], week_vak_su[-1][1], week_vak_su[-1][2])
         for vacancy in vacancies:
+            k += 1
             bot.send_message(message.chat.id, vacancy)
+            if k>20:
+                break
         del week_vak_su[-1]
 
 def schedule_job_rf(message):
     current_datetime = datetime.datetime.now()
-    if current_datetime.weekday() == 0:  # Проверка, что сегодня понедельник
-        bot.send_message(message.chat.id, "Привет это рассылка")
+    if current_datetime.weekday() == 5: 
+        k = 0
+        bot.send_message(message.chat.id, "Привет это рассылка от Работа России")
         vacancies = get_week_rf(week_vak_rf[-1][0], week_vak_rf[-1][1], week_vak_rf[-1][2])
         for vacancy in vacancies:
+            k+=1
             bot.send_message(message.chat.id, vacancy)
+            if k>20:
+                break
         del week_vak_rf[-1]
 
 @bot.message_handler(content_types=["text"])
@@ -227,7 +239,7 @@ def get_text_messages(message):
     if week1 == True:
         if message.text == "Да":
             mas_week = [sl_id[message.chat.id], sl_city[message.chat.id], sl_salary[message.chat.id]]
-            week_vak.append(mas_week)
+            week_vak_su.append(mas_week)
         if message.text == "Да" or message.text == "Нет":
             salary1 = True
     if salary1 == True:
