@@ -159,13 +159,22 @@ def get_text_messages(message):
         bot.send_message(message.from_user.id, "Напишите_заработную_плату",
                          reply_markup=types.ReplyKeyboardRemove())
     if flag == True and message.text != sl_city[message.chat.id]:
-        sl_salary[message.chat.id] = int(message.text)
-        masiv.append(message.text)
-        flag = False
+        arr_check = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
+        check = True
+        for i in message.text:
+            if i not in arr_check:
+                check = False
+        if check == True: 
+            sl_salary[message.chat.id] = int(message.text)
+            masiv.append(message.text)
+            flag = False
         if sl_salary.get(message.chat.id)!=None:
             week = True
-        bot.send_message(message.from_user.id, "Хотите присылать раз в неделю?(Да/нет)",
-                         reply_markup=types.ReplyKeyboardRemove())
+            bot.send_message(message.from_user.id, "Хотите присылать раз в неделю?(Да/нет)",
+                            reply_markup=types.ReplyKeyboardRemove())
+        else:
+            bot.send_message(message.from_user.id, "Можно писать только цифры",
+                            reply_markup=types.ReplyKeyboardRemove())
     if week == True:
         if message.text == "Да":
             mas_week = [sl_id[message.chat.id], sl_city[message.chat.id], sl_salary[message.chat.id]]
@@ -230,12 +239,22 @@ def get_text_messages(message):
         bot.send_message(message.from_user.id, "Напишите_заработную_плату",
                          reply_markup=types.ReplyKeyboardRemove())
     if flag1 == True and message.text != sl_city[message.chat.id]:
-        sl_salary[message.chat.id] = int(message.text)
-        flag1 = False
+        arr_check = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
+        check = True
+        for i in message.text:
+            if i not in arr_check:
+                check = False
+        if check == True: 
+            sl_salary[message.chat.id] = int(message.text)
+            masiv.append(message.text)
+            flag1 = False
         if sl_salary.get(message.chat.id)!=None:
             week1 = True
-        bot.send_message(message.from_user.id, "Хотите присылать раз в неделю?(Да/нет)",
-                         reply_markup=types.ReplyKeyboardRemove())
+            bot.send_message(message.from_user.id, "Хотите присылать раз в неделю?(Да/нет)",
+                            reply_markup=types.ReplyKeyboardRemove())
+        else:
+            bot.send_message(message.from_user.id, "Можно писать только цифры",
+                            reply_markup=types.ReplyKeyboardRemove())
     if week1 == True:
         if message.text == "Да":
             mas_week = [sl_id[message.chat.id], sl_city[message.chat.id], sl_salary[message.chat.id]]
@@ -301,13 +320,22 @@ def get_text_messages(message):
         bot.send_message(message.from_user.id, "Напишите_заработную_плату",
                          reply_markup=types.ReplyKeyboardRemove())
     if flag2 == True and message.text != sl_city[message.chat.id]:
-        sl_salary[message.chat.id] = int(message.text)
-        masiv.append(message.text)
-        flag2 = False
+        arr_check = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
+        check = True
+        for i in message.text:
+            if i not in arr_check:
+                check = False
+        if check == True: 
+            sl_salary[message.chat.id] = int(message.text)
+            masiv.append(message.text)
+            flag2 = False
         if sl_salary.get(message.chat.id)!=None:
             week2 = True
-        bot.send_message(message.from_user.id, "Хотите присылать раз в неделю?(Да/нет)",
-                         reply_markup=types.ReplyKeyboardRemove())
+            bot.send_message(message.from_user.id, "Хотите присылать раз в неделю?(Да/нет)",
+                            reply_markup=types.ReplyKeyboardRemove())
+        else:
+            bot.send_message(message.from_user.id, "Можно писать только цифры",
+                            reply_markup=types.ReplyKeyboardRemove())
     if week2 == True:
         if message.text == "Да":
             mas_week = [sl_id[message.chat.id], sl_city[message.chat.id], sl_salary[message.chat.id]]
