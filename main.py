@@ -181,6 +181,7 @@ def get_text_messages(message):
             week_vak.append(mas_week)
         if message.text == "Да" or message.text == "Нет":
             salary = True
+            week = False
     if salary == True:
         bot.send_message(message.chat.id, "Информация обрабатывается,подождите..",
                          reply_markup=types.ReplyKeyboardRemove())
@@ -261,6 +262,7 @@ def get_text_messages(message):
             week_vak_su.append(mas_week)
         if message.text == "Да" or message.text == "Нет":
             salary1 = True
+            week1 = False
     if salary1 == True:
         bot.send_message(message.chat.id, "Информация обрабатывается,подождите..",
                          reply_markup=types.ReplyKeyboardRemove())
@@ -342,6 +344,7 @@ def get_text_messages(message):
             week_vak_rf.append(mas_week)
         if message.text == "Да" or message.text == "Нет":
             salary2 = True
+            week2 = False
     if salary2 == True:
         bot.send_message(message.chat.id, "Информация обрабатывается,подождите..",
                          reply_markup=types.ReplyKeyboardRemove())
